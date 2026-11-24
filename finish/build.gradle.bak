@@ -1,0 +1,54 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+}
+
+// tag::allprojects[]
+allprojects  {
+    group = 'io.openliberty.guides'
+    version = '1.0-SNAPSHOT'
+}
+// end::allprojects[]
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    // tag::options[]
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+    // end::options[]
+
+    // tag::junit[]
+    test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        testImplementation platform('org.junit:junit-bom:5.14.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+        
+        // Modernized Jakarta EE dependencies for Spring Boot 3.x
+        implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+        implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    }
+    // end::junit[]
+
+    // tag::repositories[]
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    // end::repositories[]
+
+}
